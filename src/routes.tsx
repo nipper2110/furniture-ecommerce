@@ -8,11 +8,11 @@ import ErrorPage from "@/pages/Error";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
-    errorElement: <ErrorPage />,
+    Component: RootLayout,
+    ErrorBoundary: ErrorPage,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: "contact", element: <ContactPage /> },
+      { index: true, Component: HomePage },
+      { path: "contact", Component: ContactPage },
     ],
   },
 ]);
