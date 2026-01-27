@@ -1,15 +1,16 @@
 import { HomeIcon } from "@radix-ui/react-icons";
 
-// export type IconPros = React.HTMLAttributes<SVGAElement>;
+export type IconProps = React.SVGProps<SVGSVGElement>;
 
 export const Icons = {
-  logo: () => (
+  logo: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
+      {...props}
     >
       <path
         stroke-linecap="round"
