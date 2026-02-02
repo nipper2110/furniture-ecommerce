@@ -140,7 +140,7 @@ export const siteConfig = {
           external: true,
         },
         {
-          title: "coffee",
+          title: "Coffee",
           href: "https://coffee.com",
           external: true,
         },

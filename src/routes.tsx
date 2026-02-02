@@ -2,8 +2,11 @@ import { createBrowserRouter } from "react-router";
 
 import RootLayout from "@/pages/RootLayout";
 import HomePage from "@/pages/Home";
-import ContactPage from "@/pages/Contact";
+import AboutPage from "@/pages/About";
 import ErrorPage from "@/pages/Error";
+import BlogRootLayout from "@/pages/blogs/BlogRootLayout";
+import BlogPage from "@/pages/blogs/Blog";
+import BlogDetailPage from "@/pages/blogs/BlogDetail";
 
 export const router = createBrowserRouter([
   {
@@ -12,7 +15,15 @@ export const router = createBrowserRouter([
     ErrorBoundary: ErrorPage,
     children: [
       { index: true, Component: HomePage },
-      { path: "contact", Component: ContactPage },
+      { path: "about", Component: AboutPage },
+      {
+        path: "blogs",
+        Component: BlogRootLayout,
+        children: [
+          { index: true, Component: BlogPage },
+          { path: ":postId", Component: BlogDetailPage },
+        ],
+      },
     ],
   },
 ]);
