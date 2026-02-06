@@ -42,7 +42,7 @@ export const posts = [
   {
     id: "uuid4",
     author: "Erisson Jone",
-    title: "keep living spaces clean and clutter-free",
+    title: "Keep living spaces clean and clutter-free",
     content:
       "The choice of furniture depends on personal preferences, the style of the living space, and the intended use of the furniture.",
     image: po4,
