@@ -9,11 +9,11 @@ import p8 from "@/data/images/p-8.webp";
 
 export const filterList = {
   types: [
-    { id: "uuid1", label: "seating" },
-    { id: "uuid2", label: "lying" },
-    { id: "uuid3", label: "entertainment" },
-    { id: "uuid4", label: "tables" },
-    { id: "uuid5", label: "storage" },
+    { id: "uuid1", label: "Seating" },
+    { id: "uuid2", label: "Lying" },
+    { id: "uuid3", label: "Entertainment" },
+    { id: "uuid4", label: "Tables" },
+    { id: "uuid5", label: "Storage" },
   ],
   categories: [
     { id: "uuid1", label: "Wooden" },

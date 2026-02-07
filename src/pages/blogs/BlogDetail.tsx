@@ -37,7 +37,9 @@ function BlogDetail() {
               <RichTextRenderer content={post.body} className="my-8" />
               <div className="mb-12 space-x-2">
                 {post.tags.map((tag) => (
-                  <Button variant="secondary">{tag}</Button>
+                  <Button key={post.id} variant="secondary">
+                    {tag}
+                  </Button>
                 ))}
               </div>
             </>
@@ -56,6 +58,7 @@ function BlogDetail() {
             {posts.map((post) => (
               <Link
                 to={`/blog/${post.id}`}
+                key={post.id}
                 className="mb-6 flex items-start gap-2"
               >
                 <img
