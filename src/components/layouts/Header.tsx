@@ -1,7 +1,9 @@
 import MainNavigation from "./MainNavigation";
 import MobileNavigation from "./MobileNavigation";
 import { siteConfig } from "@/config/site";
-import { ModeToggle } from "../mode-toggle";
+import { ModeToggle } from "@/components/mode-toggle";
+import AuthDropDown from "@/components/layouts/AuthDropDown";
+import { User } from "@/data/user";
 
 function Header() {
   return (
@@ -12,6 +14,7 @@ function Header() {
 
         <div className="mr-8 flex flex-1 items-center justify-end space-x-4 lg:mr-0">
           <ModeToggle />
+          <AuthDropDown user={User} />
         </div>
       </nav>
     </header>

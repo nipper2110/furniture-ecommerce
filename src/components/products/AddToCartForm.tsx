@@ -44,7 +44,7 @@ export default function AddToCartForm({ canBuy }: showByuNowProps) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex max-w-65 flex-col gap-4"
       >
-        <div className="flex w-35 items-center">
+        <div className="flex w-31 items-center">
           <Button
             type="button"
             variant="outline"

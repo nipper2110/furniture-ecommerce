@@ -12,9 +12,12 @@ const BlogRootLayout = lazy(() => import("@/pages/blogs/BlogRootLayout"));
 const BlogPage = lazy(() => import("@/pages/blogs/Blog"));
 const BlogDetailPage = lazy(() => import("@/pages/blogs/BlogDetail"));
 
-import ProductRootLayout from "./pages/products/ProductRootLayout";
-import ProductPage from "./pages/products/Product";
-import ProductDetailPage from "./pages/products/ProductDetail";
+import ProductRootLayout from "@/pages/products/ProductRootLayout";
+import ProductPage from "@/pages/products/Product";
+import ProductDetailPage from "@/pages/products/ProductDetail";
+
+import LoginPage from "@/pages/auth/Login";
+import RegisterPage from "@/pages/auth/Register";
 
 export const router = createBrowserRouter([
   {
@@ -41,5 +44,15 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+
+  {
+    path: "/login",
+    Component: LoginPage,
+  },
+
+  {
+    path: "/register",
+    Component: RegisterPage,
   },
 ]);

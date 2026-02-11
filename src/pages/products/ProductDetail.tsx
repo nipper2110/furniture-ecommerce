@@ -7,6 +7,13 @@ import ProductCard from "@/components/products/ProductCard";
 import { Icons } from "@/components/icons";
 
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+import {
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -71,6 +78,22 @@ function ProductDetail() {
             />
           </div>
           <AddToCartForm canBuy={product?.status === "active"} />
+          <Separator className="my-5" />
+
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue="shipping"
+            className="max-w-lg"
+          >
+            <AccordionItem value="item-1" className="border-none">
+              <AccordionTrigger>Description</AccordionTrigger>
+              <AccordionContent>
+                {product?.description ??
+                  "No description is available for this product."}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </section>
 
