@@ -1,0 +1,48 @@
+import express, { NextFunction, Request, Response } from "express";
+import helmet from "helmet";
+import compression from "compression";
+import cors from "cors";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+
+import { limiter } from "./middlewares/rateLimiter";
+import { auth } from "./middlewares/auth";
+
+import healthRoutes from "./routes/v1/health";
+import authRoutes from "./routes/v1/auth";
+import userRoutes from "./routes/v1/admin/user";
+
+// Tutorial for ejs
+import viewRoutes from "./routes/v1/web/view";
+import * as errorController from "./controllers/web/errorController";
+
+export const app = express();
+
+app.set("view engine", "ejs");
+app.set("views", "src/views");
+
+app
+  .use(morgan("dev"))
+  .use(express.urlencoded({ extended: true }))
+  .use(express.json())
+  .use(cookieParser())
+  .use(cors())
+  .use(helmet())
+  .use(compression())
+  .use(limiter);
+
+app.use("/api/v1", healthRoutes);
+app.use("/api/v1", authRoutes);
+app.use("/api/v1/admins", auth, userRoutes);
+
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  const status = error.status || 500;
+  const message = error.message || "Server Error";
+  const errorCode = error.code || "Error_Code";
+  res.status(status).json({ message, error: errorCode });
+});
+
+// Tuto for ejs
+app.use(express.static("public"));
+app.use(viewRoutes);
+//app.use(errorController.notFound);
