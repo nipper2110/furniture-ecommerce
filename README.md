@@ -14,8 +14,10 @@ cd furniture-backend
 npm install
 # Configure your .env file
 npm start
+```
 
-### 2. Frontedn Setup
+### 2. Frontend Setup
+```bash
 cd furniture-frontend
 npm install
 npm run dev
