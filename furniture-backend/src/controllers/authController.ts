@@ -206,22 +206,22 @@ export const verifyOtp = [
 
 export const confirmPassword = [
   body("phone", "Invalid phone number")
-    .trim()
     .notEmpty()
+    .trim()
     .matches("^[0-9]+$")
     .isLength({ min: 6, max: 12 }),
-  body("password", "Password must be 8 digits")
-    .trim()
+  body("password", "Passwrod must be 8 digits")
     .notEmpty()
+    .trim()
     .matches("^[0-9]+$")
     .isLength({ min: 8, max: 8 }),
-  body("token", "Invalid Token").trim().notEmpty().escape(),
+  body("token", "Invalid Token").notEmpty().trim().escape(),
   async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
       const error: any = new Error(errors[0].msg);
       error.status = 400;
-      error.code = "Error_Invalid";
+      error.message = "Error_Invalid";
       return next(error);
     }
 
@@ -235,14 +235,14 @@ export const confirmPassword = [
 
     // OTP error count is over limit
     if (otpRow!.error === 5) {
-      const error: any = new Error("This request may be an attack.");
+      const error: any = new Error("This request may be an attack");
       error.status = 400;
-      error.code = "Error_BadRequest";
+      error.message = "Error_BadRequest";
       return next(error);
     }
 
     // Token is wrong
-    if (otpRow?.verifyToken !== token) {
+    if (otpRow!.verifyToken !== token) {
       const otpData = {
         error: 5,
       };
@@ -250,7 +250,7 @@ export const confirmPassword = [
 
       const error: any = new Error("Invalid Token");
       error.status = 401;
-      error.code = "Error_Invalid";
+      error.message = "Error_Invalid";
       return next(error);
     }
 
@@ -261,7 +261,7 @@ export const confirmPassword = [
         "Your request is expired. Please try again.",
       );
       error.status = 403;
-      error.code = "Error_Expired";
+      error.message = "Error_Expired";
       return next(error);
     }
 
@@ -308,7 +308,7 @@ export const confirmPassword = [
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-        maxAge: 15 * 60 * 1000, // 15 minutes
+        maxAge: 15 * 60 * 1000, // 15 min
       })
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -318,14 +318,14 @@ export const confirmPassword = [
       })
       .status(201)
       .json({
-        message: "Successfully created an account.",
+        message: "Successfully created an account",
         userId: newUser.id,
       });
   },
 ];
 
 export const login = [
-  body("phone", "Invalid phone number")
+  body("phone", "Invalid phone")
     .trim()
     .notEmpty()
     .matches("^[0-9]+$")
@@ -358,7 +358,7 @@ export const login = [
       const error: any = new Error(
         "Your account is temporarily locked. Please contact us.",
       );
-      error.status = 401;
+      error.status = 400;
       error.code = "Error_Freeze";
       return next(error);
     }
@@ -370,7 +370,7 @@ export const login = [
       const today = new Date().toLocaleDateString();
       const isSameDate = lastRequest === today;
 
-      // Today password is wrong first time
+      // Today passwrod is wrong first time
       if (!isSameDate) {
         const userData = {
           errorLoginCount: 1,
@@ -394,7 +394,7 @@ export const login = [
         }
       }
       // Ending
-      const error: any = new Error("Password is wrong.");
+      const error: any = new Error("Password is wrong");
       error.status = 401;
       error.code = "Error_Invalid";
       return next(error);
@@ -431,15 +431,18 @@ export const login = [
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-        maxAge: 15 * 60 * 1000, // 15 minutes
+        maxAge: 15 * 60 * 1000, // 15 min
       })
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30
       })
       .status(200)
-      .json({ message: "Successfully Logged In", userId: user!.id });
+      .json({
+        message: "Successfully Logged in",
+        userId: user!.id,
+      });
   },
 ];
