@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { errorCode } from "../../config/errorCode";
 
 interface CustomRequest extends Request {
   userId?: number;
@@ -16,14 +17,14 @@ export const auth = async (
   if (!refreshToken) {
     const err: any = new Error("You are not an authenticated user.");
     err.status = 401;
-    err.code = "Error_Unauthenticated";
+    err.code = errorCode.unauthenticated;
     return next(err);
   }
 
   if (!accessToken) {
     const err: any = new Error("Access Token has expired.");
     err.status = 401;
-    err.code = "Error_AccessTokenExpired";
+    err.code = errorCode.accessTokenExpired;
     return next(err);
   }
 
@@ -37,11 +38,11 @@ export const auth = async (
     if (error.name === "TokenExpiredError") {
       error.message = "Access Token has expired.";
       error.status = 401;
-      error.code = "Error_AccessTokenExpired";
+      error.code = errorCode.accessTokenExpired;
     } else {
       error.message = "Access Token is invalid.";
       error.status = 400;
-      error.code = "Error_Attack";
+      error.code = errorCode.attack;
     }
     return next(error);
   }
