@@ -410,7 +410,7 @@ export const login = [
       accessTokenPayload,
       process.env.ACCESS_TOKEN_SECRET!,
       {
-        expiresIn: 60 * 15,
+        expiresIn: 60 * 2,
       },
     );
 
@@ -439,7 +439,7 @@ export const login = [
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
       })
       .status(200)
       .json({
