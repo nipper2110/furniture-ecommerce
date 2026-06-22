@@ -4,6 +4,7 @@ import {
   createOtp,
   createUser,
   getOtpByPhone,
+  getUserById,
   getUserByPhone,
   updateOtp,
   updateUser,
@@ -441,8 +442,57 @@ export const login = [
       })
       .status(200)
       .json({
-        message: "Successfully Logged in",
+        message: "Successfully ogged in",
         userId: user!.id,
       });
   },
 ];
+
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // Clear HttpOnly cookies
+  const refreshToken = req.cookies ? req.cookies.refreshToken : null;
+  if (!refreshToken) {
+    const error: any = new Error("You are not an authenticated user.");
+    error.status = 401;
+    error.code = "Error_Unauthenticated";
+    return next(error);
+  }
+
+  let decoded;
+  try {
+    decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as {
+      id: number;
+      phone: string;
+    };
+  } catch (err) {
+    const error: any = new Error("You are not an authenticated user.");
+    error.status = 401;
+    error.code = "Error_Unauthenticated";
+    return next(error);
+  }
+
+  const user = await getUserById(decoded.id);
+  checkUserIfNotExist(user);
+
+  if (user?.phone !== decoded.phone) {
+    const error: any = new Error("You are not an authenticated user.");
+    error.status = 401;
+    error.code = "Error_Unauthenticated";
+    return next(error);
+  }
+
+  // Update randToken in User Table
+  const userData = {
+    randToken: generateToken(),
+  };
+  await updateUser(user.id, userData);
+
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
+
+  res.status(200).json({ message: "Successfully logged out. See you soon." });
+};

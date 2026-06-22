@@ -5,7 +5,11 @@ interface CustomRequest extends Request {
   userId?: number;
 }
 
-export const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
+export const auth = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   const accessToken = req.cookies ? req.cookies.accessToken : null;
   const refreshToken = req.cookies ? req.cookies.refreshToken : null;
 
@@ -35,7 +39,7 @@ export const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
       error.status = 401;
       error.code = "Error_AccessTokenExpired";
     } else {
-      error.message = "Access Token is invalid";
+      error.message = "Access Token is invalid.";
       error.status = 400;
       error.code = "Error_Attack";
     }
@@ -43,6 +47,5 @@ export const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
   }
 
   req.userId = decoded.id;
-
   next();
 };
