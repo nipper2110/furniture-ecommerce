@@ -44,6 +44,13 @@ export const auth = async (
       return next(err);
     }
 
+    if (isNaN(decoded.id)) {
+      const err: any = new Error("You are not an authenticated user.");
+      err.status = 401;
+      err.code = errorCode.unauthenticated;
+      return next(err);
+    }
+
     const user = await getUserById(decoded.id);
     if (!user) {
       const err: any = new Error("This account has not registered.");
@@ -118,6 +125,14 @@ export const auth = async (
       decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!) as {
         id: number;
       };
+
+      if (isNaN(decoded.id)) {
+        const err: any = new Error("You are not an authenticated user.");
+        err.status = 401;
+        err.code = errorCode.unauthenticated;
+        return next(err);
+      }
+
       req.userId = decoded.id;
       next();
     } catch (error: any) {
