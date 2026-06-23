@@ -4,6 +4,10 @@ import compression from "compression";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import i18next from "i18next";
+import Backend from "i18next-fs-backend";
+import { handle, LanguageDetector } from "i18next-http-middleware";
+import path from "path";
 
 import { limiter } from "./middlewares/rateLimiter";
 import { auth } from "./middlewares/auth";
@@ -11,6 +15,7 @@ import { auth } from "./middlewares/auth";
 import healthRoutes from "./routes/v1/health";
 import authRoutes from "./routes/v1/auth";
 import userRoutes from "./routes/v1/admin/user";
+import profileRoutes from "./routes/v1/api/user";
 
 // Tutorial for ejs
 import viewRoutes from "./routes/v1/web/view";
@@ -49,9 +54,32 @@ app
   .use(compression())
   .use(limiter);
 
+i18next
+  .use(Backend)
+  .use(LanguageDetector)
+  .init({
+    backend: {
+      loadPath: path.join(
+        process.cwd(),
+        "src/locales",
+        "{{lng}}",
+        "{{ns}}.json",
+      ),
+    },
+    detection: {
+      order: ["querystring", "cookie"],
+      caches: ["cookie"],
+    },
+    fallbackLng: "en",
+    preload: ["en", "mm"],
+  });
+
+app.use(handle(i18next));
+
 app.use("/api/v1", healthRoutes);
 app.use("/api/v1", authRoutes);
 app.use("/api/v1/admins", auth, userRoutes);
+app.use("/api/v1/api", profileRoutes);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   const status = error.status || 500;
