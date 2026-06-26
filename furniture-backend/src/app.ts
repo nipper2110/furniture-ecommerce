@@ -79,7 +79,7 @@ app.use(handle(i18next));
 
 app.use("/api/v1", healthRoutes);
 app.use("/api/v1", authRoutes);
-app.use("/api/v1/admins", auth, adminRoutes);
+app.use("/api/v1/admins", auth, authorise(true, "ADMIN"), adminRoutes);
 app.use("/api/v1/api", profileRoutes);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
