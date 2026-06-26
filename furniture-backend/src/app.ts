@@ -11,10 +11,11 @@ import path from "path";
 
 import { limiter } from "./middlewares/rateLimiter";
 import { auth } from "./middlewares/auth";
+import { authorise } from "./middlewares/authorise";
 
 import healthRoutes from "./routes/v1/health";
 import authRoutes from "./routes/v1/auth";
-import userRoutes from "./routes/v1/admin/user";
+import adminRoutes from "./routes/v1/admin/user";
 import profileRoutes from "./routes/v1/api/user";
 
 // Tutorial for ejs
@@ -67,7 +68,7 @@ i18next
       ),
     },
     detection: {
-      order: ["querystring", "cookie"],
+      order: ["querystring", "cookies"],
       caches: ["cookie"],
     },
     fallbackLng: "en",
@@ -78,7 +79,7 @@ app.use(handle(i18next));
 
 app.use("/api/v1", healthRoutes);
 app.use("/api/v1", authRoutes);
-app.use("/api/v1/admins", auth, userRoutes);
+app.use("/api/v1/admins", auth, adminRoutes);
 app.use("/api/v1/api", profileRoutes);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
