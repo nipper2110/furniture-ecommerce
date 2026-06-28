@@ -10,14 +10,7 @@ import { handle, LanguageDetector } from "i18next-http-middleware";
 import path from "path";
 
 import { limiter } from "./middlewares/rateLimiter";
-import { auth } from "./middlewares/auth";
-import { authorise } from "./middlewares/authorise";
-
-import healthRoutes from "./routes/v1/health";
-import authRoutes from "./routes/v1/auth";
-import adminRoutes from "./routes/v1/admin/user";
-import profileRoutes from "./routes/v1/api/user";
-
+import routes from "./routes/v1";
 // Tutorial for ejs
 import viewRoutes from "./routes/v1/web/view";
 import * as errorController from "./controllers/web/errorController";
@@ -77,10 +70,7 @@ i18next
 
 app.use(handle(i18next));
 
-app.use("/api/v1", healthRoutes);
-app.use("/api/v1", authRoutes);
-app.use("/api/v1/admins", auth, authorise(true, "ADMIN"), adminRoutes);
-app.use("/api/v1/api", profileRoutes);
+app.use(routes);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   const status = error.status || 500;
