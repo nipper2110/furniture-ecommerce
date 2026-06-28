@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { getUserById } from "../services/authService";
 import { checkUserIfNotExist } from "../utils/auth";
 import { errorCode } from "../../config/errorCode";
+import { createError } from "../utils/error";
 
 interface CustomRequest extends Request {
   userId?: number;
@@ -16,26 +17,27 @@ export const authorise = (permission: boolean, ...roles: string[]) => {
     const user = await getUserById(userId!);
 
     if (!user) {
-      const err: any = new Error("This user has not been registered.");
-      err.status = 401;
-      err.code = errorCode.unauthenticated;
-      return next(err);
+      return next(
+        createError(
+          "This user has not been registered.",
+          401,
+          errorCode.unauthenticated,
+        ),
+      );
     }
 
     const result = roles.includes(user.role);
 
     if (permission && !result) {
-      const err: any = new Error("This action is not allowed.");
-      err.status = 403;
-      err.code = errorCode.unauthorised;
-      return next(err);
+      return next(
+        createError("This action is not allowed.", 403, errorCode.unauthorised),
+      );
     }
 
     if (!permission && result) {
-      const err: any = new Error("This action is not allowed.");
-      err.status = 403;
-      err.code = errorCode.unauthorised;
-      return next(err);
+      return next(
+        createError("This action is not allowed.", 403, errorCode.unauthorised),
+      );
     }
 
     req.user = user;
