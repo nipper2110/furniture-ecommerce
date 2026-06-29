@@ -265,7 +265,7 @@ export const confirmPassword = [
       accessTokenPayload,
       process.env.ACCESS_TOKEN_SECRET!,
       {
-        expiresIn: 60 * 10,
+        expiresIn: 60 * 15,
       },
     );
 
@@ -383,7 +383,7 @@ export const login = [
       accessTokenPayload,
       process.env.ACCESS_TOKEN_SECRET!,
       {
-        expiresIn: 60 * 10,
+        expiresIn: 60 * 15,
       },
     );
 
@@ -717,7 +717,7 @@ export const resetPassword = [
       accessTokenPayload,
       process.env.ACCESS_TOKEN_SECRET!,
       {
-        expiresIn: 60 * 10,
+        expiresIn: 60 * 15,
       },
     );
 

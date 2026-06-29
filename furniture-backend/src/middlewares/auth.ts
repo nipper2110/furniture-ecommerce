@@ -100,7 +100,7 @@ export const auth = async (
       accessTokenPayload,
       process.env.ACCESS_TOKEN_SECRET!,
       {
-        expiresIn: 60 * 10, // 10 min
+        expiresIn: 60 * 15, // 15 min
       },
     );
 
