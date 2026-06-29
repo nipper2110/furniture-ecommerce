@@ -72,3 +72,8 @@ export type ProductsOnOrders = Prisma.ProductsOnOrdersModel
  * 
  */
 export type Otp = Prisma.OtpModel
+/**
+ * Model Setting
+ * 
+ */
+export type Setting = Prisma.SettingModel

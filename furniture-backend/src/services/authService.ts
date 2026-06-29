@@ -1,33 +1,32 @@
-import e from "express";
 import { prisma } from "../lib/prisma";
 
 export const getUserByPhone = async (phone: string) => {
-  return await prisma.user.findUnique({
+  return prisma.user.findUnique({
     where: { phone },
   });
 };
 
-export const createOtp = async (userData: any) => {
-  return await prisma.otp.create({
-    data: userData,
+export const createOtp = async (otpData: any) => {
+  return prisma.otp.create({
+    data: otpData,
   });
 };
 
 export const getOtpByPhone = async (phone: string) => {
-  return await prisma.otp.findUnique({
+  return prisma.otp.findUnique({
     where: { phone },
   });
 };
 
-export const updateOtp = async (id: number, userData: any) => {
-  return await prisma.otp.update({
+export const updateOtp = async (id: number, otpData: any) => {
+  return prisma.otp.update({
     where: { id },
-    data: userData,
+    data: otpData,
   });
 };
 
 export const createUser = async (userData: any) => {
-  return await prisma.user.create({
+  return prisma.user.create({
     data: userData,
   });
 };
