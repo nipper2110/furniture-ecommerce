@@ -8,12 +8,18 @@ import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 import { handle, LanguageDetector } from "i18next-http-middleware";
 import path from "path";
+import cron from "node-cron";
 
 import { limiter } from "./middlewares/rateLimiter";
 import routes from "./routes/v1";
+
 // Tutorial for ejs
 import viewRoutes from "./routes/v1/web/view";
 import * as errorController from "./controllers/web/errorController";
+import {
+  createOrUpdateSettingStatus,
+  getSettingStatus,
+} from "./services/settingService";
 
 export const app = express();
 
@@ -77,6 +83,16 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   const message = error.message || "Server Error";
   const errorCode = error.code || "Error_Code";
   res.status(status).json({ message, error: errorCode });
+});
+
+// Auto Timer
+cron.schedule("* * * * *", async () => {
+  console.log("Running a task every minute for Testing purpose");
+  const setting = await getSettingStatus("maintenance");
+  if (setting?.value === "true") {
+    await createOrUpdateSettingStatus("maintenance", "false");
+    console.log("Now maintenance mode is off");
+  }
 });
 
 // Tuto for ejs
