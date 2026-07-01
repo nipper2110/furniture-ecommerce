@@ -1,13 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import { body, query, validationResult } from "express-validator";
+import { unlink } from "node:fs/promises";
+import path from "node:path";
+
 import { errorCode } from "../../../config/errorCode";
 import { authorise } from "../../utils/authorise";
-import { getUserById } from "../../services/authService";
+import { getUserById, updateUser } from "../../services/authService";
 import { checkUserIfNotExist } from "../../utils/auth";
 import { createError } from "../../utils/error";
+import { checkUploadFile } from "../../utils/check";
 
 interface customRequest extends Request {
   userId?: number;
+  file?: any;
 }
 
 export const changeLanguage = [
@@ -49,4 +54,45 @@ export const testPermission = async (
   }
 
   res.status(200).json({ info });
+};
+
+export const uploadProfile = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = req.userId;
+  const image = req.file;
+  const user = await getUserById(userId!);
+  checkUserIfNotExist(user);
+  checkUploadFile(image);
+
+  console.log("Image---", image);
+  const fileName = image.filename;
+  // const filePath = image!.path;
+  // const filePath = image.path.replace("\\", "/"); // for both window and mac
+
+  if (user?.image) {
+    const filePath = path.join(
+      __dirname,
+      "../../../",
+      "/uploads/images",
+      user!.image!,
+    );
+    try {
+      await unlink(filePath);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const userData = {
+    image: fileName,
+  };
+  await updateUser(user!.id, userData);
+
+  res.status(200).json({
+    message: "Profile picture uploaded successfully.",
+    image: fileName,
+  });
 };
