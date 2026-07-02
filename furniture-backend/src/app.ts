@@ -76,6 +76,8 @@ i18next
 
 app.use(handle(i18next));
 
+app.use(express.static("uploads")); // to see the photo in localhost
+
 app.use(routes);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {

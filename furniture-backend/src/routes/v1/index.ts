@@ -18,7 +18,7 @@ const router = express.Router();
 
 router.use("/api/v1", healthRoutes);
 router.use("/api/v1", maintenance, authRoutes);
-router.use("/api/v1/user", maintenance, userRoutes);
+router.use("/api/v1/users", maintenance, userRoutes);
 router.use("/api/v1/admins", auth, authorise(true, "ADMIN"), adminRoutes);
 
 export default router;
