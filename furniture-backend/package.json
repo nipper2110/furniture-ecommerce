@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "dev": "nodemon --exec tsx src/index.ts",
+    "work": "nodemon --exec tsx src/jobs/workers/imageWorker.ts",
     "build": "tsc -p .",
     "start": "node dist/src/index.js"
   },
@@ -42,6 +43,7 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/node-cron": "^3.0.11",
     "bcrypt": "^6.0.0",
+    "bullmq": "^5.79.2",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
@@ -55,6 +57,7 @@
     "i18next": "^26.3.1",
     "i18next-fs-backend": "^2.6.6",
     "i18next-http-middleware": "^3.9.7",
+    "ioredis": "^5.11.1",
     "jest-config": "^30.3.0",
     "jsonwebtoken": "^9.0.3",
     "moment": "^2.30.1",

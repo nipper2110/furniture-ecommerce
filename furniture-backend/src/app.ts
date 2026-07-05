@@ -89,7 +89,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 
 // Auto Timer
 cron.schedule("* * * * *", async () => {
-  console.log("Running a task every minute for Testing purpose");
+  // console.log("Running a task every minute for Testing purpose");
   const setting = await getSettingStatus("maintenance");
   if (setting?.value === "true") {
     await createOrUpdateSettingStatus("maintenance", "false");
