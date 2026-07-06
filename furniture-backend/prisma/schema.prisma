@@ -52,7 +52,7 @@ model Post {
   type       Type      @relation(fields: [typeId], references: [id])
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  tag        PostTag[]
+  tags       PostTag[]
 }
 
 model Product {
@@ -72,7 +72,7 @@ model Product {
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
   orders      ProductsOnOrders[]
-  tag         ProductTag[]
+  tags        ProductTag[]
 }
 
 model Image {
@@ -102,9 +102,9 @@ model User {
 }
 
 model PostTag {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(52)
-  post Post[]
+  id    Int    @id @default(autoincrement())
+  name  String @unique @db.VarChar(52)
+  posts Post[]
 }
 
 model ProductTag {

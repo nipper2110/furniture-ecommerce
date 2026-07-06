@@ -230,24 +230,24 @@ export type ProductTagScalarWhereWithAggregatesInput = {
 
 export type ProductTagCreateInput = {
   name: string
-  product?: Prisma.ProductCreateNestedManyWithoutTagInput
+  product?: Prisma.ProductCreateNestedManyWithoutTagsInput
 }
 
 export type ProductTagUncheckedCreateInput = {
   id?: number
   name: string
-  product?: Prisma.ProductUncheckedCreateNestedManyWithoutTagInput
+  product?: Prisma.ProductUncheckedCreateNestedManyWithoutTagsInput
 }
 
 export type ProductTagUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  product?: Prisma.ProductUpdateManyWithoutTagNestedInput
+  product?: Prisma.ProductUpdateManyWithoutTagsNestedInput
 }
 
 export type ProductTagUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  product?: Prisma.ProductUncheckedUpdateManyWithoutTagNestedInput
+  product?: Prisma.ProductUncheckedUpdateManyWithoutTagsNestedInput
 }
 
 export type ProductTagCreateManyInput = {
