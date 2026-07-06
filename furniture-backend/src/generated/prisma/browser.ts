@@ -48,15 +48,15 @@ export type Image = Prisma.ImageModel
  */
 export type User = Prisma.UserModel
 /**
- * Model Tag
+ * Model PostTag
  * 
  */
-export type Tag = Prisma.TagModel
+export type PostTag = Prisma.PostTagModel
 /**
- * Model Taggable
+ * Model ProductTag
  * 
  */
-export type Taggable = Prisma.TaggableModel
+export type ProductTag = Prisma.ProductTagModel
 /**
  * Model Order
  * 

@@ -22,7 +22,6 @@ router.patch(
   upload.single("avatar"),
   uploadProfileOptimize,
 );
-
 router.patch(
   "/profile/upload/mulitple",
   auth,
