@@ -12,7 +12,7 @@ import { createError } from "../../utils/error";
 import { checkUploadFile } from "../../utils/check";
 import ImageQueue from "../../jobs/queues/imageQueue";
 
-interface customRequest extends Request {
+interface CustomRequest extends Request {
   userId?: number;
   file?: any;
 }
@@ -23,7 +23,7 @@ export const changeLanguage = [
     .notEmpty()
     .matches("^[a-z]+$")
     .isLength({ min: 2, max: 3 }),
-  async (req: customRequest, res: Response, next: NextFunction) => {
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
       return next(createError(errors[0].msg, 400, errorCode.invalid));
@@ -36,7 +36,7 @@ export const changeLanguage = [
 ];
 
 export const testPermission = async (
-  req: customRequest,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) => {
@@ -59,7 +59,7 @@ export const testPermission = async (
 };
 
 export const uploadProfile = async (
-  req: customRequest,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) => {
@@ -101,7 +101,7 @@ export const uploadProfile = async (
 
 // Just for Testing
 export const getMyPhoto = async (
-  req: customRequest,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) => {
@@ -118,7 +118,7 @@ export const getMyPhoto = async (
 };
 
 export const uploadProfileMultiple = async (
-  req: customRequest,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) => {
@@ -130,7 +130,7 @@ export const uploadProfileMultiple = async (
 };
 
 export const uploadProfileOptimize = async (
-  req: customRequest,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) => {
