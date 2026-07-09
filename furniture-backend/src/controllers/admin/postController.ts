@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { body, query, validationResult } from "express-validator";
 import sanitizeHtml from "sanitize-html";
+import path from "path";
+import { unlink } from "fs/promises";
 
 import { errorCode } from "../../../config/errorCode";
 import { checkUserIfNotExist } from "../../utils/auth";
@@ -13,6 +15,34 @@ import { createOnePost, PostArgs } from "../../services/postService";
 interface CustomRequest extends Request {
   userId?: number;
 }
+
+const removeFiles = async (
+  originalFile: string,
+  optimizedFile: string | null,
+) => {
+  try {
+    const originalFilePath = path.join(
+      __dirname,
+      "../../..",
+      "/uploads/images",
+      originalFile,
+    );
+
+    await unlink(originalFilePath);
+
+    if (optimizedFile) {
+      const optimizedFilePath = path.join(
+        __dirname,
+        "../../..",
+        "/uploads/optimize",
+        originalFile,
+      );
+      await unlink(optimizedFilePath);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const createPost = [
   body("title", "Title is required.").notEmpty().trim().escape(),
@@ -35,16 +65,31 @@ export const createPost = [
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
-      return createError(errors[0].msg, 400, errorCode.invalid);
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
+      return next(createError(errors[0].msg, 400, errorCode.invalid));
     }
 
     let { title, content, body, category, type, tags } = req.body;
 
     const userId = req.userId;
     const image = req.file;
-    const user = await getUserById(userId!);
-    checkUserIfNotExist(user);
     checkUploadFile(image);
+
+    const user = await getUserById(userId!);
+    if (!user) {
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
+      return next(
+        createError(
+          "This phone has not been registered.",
+          401,
+          errorCode.unauthenticated,
+        ),
+      );
+    }
 
     const splitFileName = req.file?.filename.split(".")[0];
 
