@@ -6,11 +6,17 @@ import { unlink } from "fs/promises";
 
 import { errorCode } from "../../../config/errorCode";
 import { checkUserIfNotExist } from "../../utils/auth";
-import { checkUploadFile } from "../../utils/check";
+import { checkModelIfExist, checkUploadFile } from "../../utils/check";
 import { createError } from "../../utils/error";
 import { getUserById } from "../../services/authService";
 import ImageQueue from "../../jobs/queues/imageQueue";
-import { createOnePost, PostArgs } from "../../services/postService";
+import {
+  createOnePost,
+  deleteOnePost,
+  getPostById,
+  PostArgs,
+  updateOnePost,
+} from "../../services/postService";
 
 interface CustomRequest extends Request {
   userId?: number;
@@ -35,7 +41,7 @@ const removeFiles = async (
         __dirname,
         "../../..",
         "/uploads/optimize",
-        originalFile,
+        optimizedFile,
       );
       await unlink(optimizedFilePath);
     }
@@ -71,11 +77,11 @@ export const createPost = [
       return next(createError(errors[0].msg, 400, errorCode.invalid));
     }
 
-    let { title, content, body, category, type, tags } = req.body;
+    const { title, content, body, category, type, tags } = req.body;
 
     const userId = req.userId;
-    const image = req.file;
-    checkUploadFile(image);
+
+    checkUploadFile(req.file);
 
     const user = await getUserById(userId!);
     if (!user) {
@@ -131,29 +137,118 @@ export const createPost = [
 ];
 
 export const updatePost = [
-  body("phone", "Invalid phone number")
+  body("postId", "Post Id is required.").notEmpty().trim().isInt({ min: 1 }),
+  body("title", "Title is required.").notEmpty().trim().escape(),
+  body("content", "Content is required.").notEmpty().trim().escape(),
+  body("body", "Body is required.")
     .notEmpty()
     .trim()
-    .matches("^[0-9]+$")
-    .isLength({ min: 6, max: 12 }),
+    .customSanitizer((value) => sanitizeHtml(value))
+    .notEmpty(),
+  body("category", "Category is required.").notEmpty().trim().escape(),
+  body("type", "Type is required.").notEmpty().trim().escape(),
+  body("tags", "Tag is invalid.")
+    .optional({ nullable: true })
+    .customSanitizer((value) => {
+      if (value) {
+        return value.split(",").filter((tag: string) => tag.trim() !== "");
+      }
+    }),
 
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
       return next(createError(errors[0].msg, 400, errorCode.invalid));
     }
 
-    let { phone, password, token } = req.body;
-    res.status(200).json({ message: "OK" });
+    const { postId, title, content, body, category, type, tags } = req.body;
+
+    const userId = req.userId;
+
+    const user = await getUserById(userId!);
+    if (!user) {
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
+      return next(
+        createError(
+          "This phone has not been registered.",
+          401,
+          errorCode.unauthenticated,
+        ),
+      );
+    }
+
+    const post = await getPostById(+postId); // "number" => int
+    if (!post) {
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
+      return next(
+        createError("This data model does not exist.", 401, errorCode.invalid),
+      );
+    }
+
+    if (user.id !== post.authorId) {
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
+      return next(
+        createError("This action is not allowed.", 403, errorCode.unauthorised),
+      );
+    }
+
+    const data: any = {
+      title,
+      content,
+      body,
+      image: req.file,
+      category,
+      type,
+      tags,
+    };
+
+    if (req.file) {
+      data.image = req.file.filename;
+
+      const splitFileName = req.file.filename.split(".")[0];
+
+      await ImageQueue.add(
+        "optimize-image",
+        {
+          filePath: req.file?.path,
+          fileName: `${splitFileName}.webp`,
+          width: 835,
+          height: 577,
+          quality: 100,
+        },
+        {
+          attempts: 3,
+          backoff: {
+            type: "exponential",
+            delay: 1000,
+          },
+        },
+      );
+
+      const optimizedFile = post.image.split(".")[0] + ".webp";
+      await removeFiles(post.image, optimizedFile);
+    }
+
+    const postUpdated = await updateOnePost(post.id, data);
+
+    res.status(200).json({
+      message: "Successfully updated the post.",
+      postId: postUpdated.id,
+    });
   },
 ];
 
 export const deletePost = [
-  body("phone", "Invalid phone number")
-    .notEmpty()
-    .trim()
-    .matches("^[0-9]+$")
-    .isLength({ min: 6, max: 12 }),
+  body("postId", "Post Id is required.").notEmpty().trim().isInt({ min: 1 }),
 
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
@@ -161,7 +256,27 @@ export const deletePost = [
       return next(createError(errors[0].msg, 400, errorCode.invalid));
     }
 
-    let { phone, password, token } = req.body;
-    res.status(200).json({ message: "OK" });
+    const { postId } = req.body;
+
+    const userId = req.userId;
+    const user = await getUserById(userId!);
+    checkUserIfNotExist(user);
+
+    const post = await getPostById(+postId);
+    checkModelIfExist(post);
+
+    if (user!.id !== post!.authorId) {
+      return next(
+        createError("This action is not allowed.", 403, errorCode.unauthorised),
+      );
+    }
+
+    const postDeleted = await deleteOnePost(post!.id);
+    const optimizedFile = post!.image.split(".")[0] + ".webp";
+    await removeFiles(post!.image, optimizedFile);
+
+    res
+      .status(200)
+      .json({ message: "Successfully deleted the post.", postId: post?.id });
   },
 ];
