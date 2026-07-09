@@ -47,6 +47,7 @@ export const createOnePost = async (postData: PostArgs) => {
       })),
     };
   }
+
   return prisma.post.create({
     data,
   });

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { body, query, validationResult } from "express-validator";
+import sanitizeHtml from "sanitize-html";
 
 import { errorCode } from "../../../config/errorCode";
 import { checkUserIfNotExist } from "../../utils/auth";
@@ -16,7 +17,11 @@ interface CustomRequest extends Request {
 export const createPost = [
   body("title", "Title is required.").notEmpty().trim().escape(),
   body("content", "Content is required.").notEmpty().trim().escape(),
-  body("body", "Body is required.").notEmpty().trim().escape(),
+  body("body", "Body is required.")
+    .notEmpty()
+    .trim()
+    .customSanitizer((value) => sanitizeHtml(value))
+    .notEmpty(),
   body("category", "Category is required.").notEmpty().trim().escape(),
   body("type", "Type is required.").notEmpty().trim().escape(),
   body("tags", "Tag is invalid.")
@@ -30,7 +35,7 @@ export const createPost = [
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
-      return next(createError(errors[0].msg, 400, errorCode.invalid));
+      return createError(errors[0].msg, 400, errorCode.invalid);
     }
 
     let { title, content, body, category, type, tags } = req.body;
