@@ -38,7 +38,7 @@ router.get("/profile/my-photo", getMyPhoto); // Just for Testing
 
 router.get("/posts/:id", auth, getPost);
 
-router.get("/posts", auth, getPostsByPagination);
-router.get("/posts/infinite", auth, getInfinitePostsByPagination);
+router.get("/posts", auth, getPostsByPagination); // Offset Pagination
+router.get("/posts/infinite", auth, getInfinitePostsByPagination); // Cursor-based Pagination
 
 export default router;
