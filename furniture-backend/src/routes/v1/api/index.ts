@@ -10,6 +10,7 @@ import {
 import { auth } from "../../../middlewares/auth";
 import upload, { uploadMemory } from "../../../middlewares/uploadFile";
 import {
+  getInfinitePostsByPagination,
   getPost,
   getPostsByPagination,
 } from "../../../controllers/api/postController";
@@ -35,7 +36,9 @@ router.patch(
 
 router.get("/profile/my-photo", getMyPhoto); // Just for Testing
 
-router.get("/posts", auth, getPostsByPagination);
 router.get("/posts/:id", auth, getPost);
+
+router.get("/posts", auth, getPostsByPagination);
+router.get("/posts/infinite", auth, getInfinitePostsByPagination);
 
 export default router;

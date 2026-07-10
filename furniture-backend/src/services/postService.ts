@@ -1,5 +1,4 @@
-import { body } from "express-validator";
-import { prisma } from "../lib/prisma";
+import { prisma } from "./prismaClient";
 
 export type PostArgs = {
   title: string;
@@ -108,6 +107,43 @@ export const deleteOnePost = async (id: number) => {
   return prisma.post.delete({
     where: {
       id,
+    },
+  });
+};
+
+export const getPostWithRelation = async (id: number) => {
+  return prisma.post.findUnique({
+    where: { id },
+    // omit: { createdAt: true }, // not to include createdAt
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      body: true,
+      image: true,
+      updatedAt: true,
+      author: {
+        select: {
+          // firstName: true,
+          // lastName: true,
+          fullName: true,
+        },
+      },
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      type: {
+        select: {
+          name: true,
+        },
+      },
+      tags: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 };
