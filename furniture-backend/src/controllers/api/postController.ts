@@ -11,6 +11,7 @@ import {
   getPostsList,
   getPostWithRelation,
 } from "../../services/postService";
+import { getOrSetCache } from "../../utils/cache";
 
 interface CustomRequest extends Request {
   userId?: number;
@@ -31,7 +32,10 @@ export const getPost = [
     const user = await getUserById(userId!);
     checkUserIfNotExist(user);
 
-    const post = await getPostWithRelation(+postId);
+    const cacheKey = `posts:${JSON.stringify(postId)}`;
+    const post = await getOrSetCache(cacheKey, async () => {
+      return await getPostWithRelation(+postId);
+    });
 
     // const modifiedPost = {
     //   id: post?.id,
@@ -101,7 +105,10 @@ export const getPostsByPagination = [
       },
     };
 
-    const posts = await getPostsList(options);
+    const cacheKey = `posts:${JSON.stringify(req.query)}`;
+    const posts = await getOrSetCache(cacheKey, async () => {
+      return await getPostsList(options);
+    });
 
     const hasNextPage = posts.length > +limit;
     let nextPage = null;
@@ -164,7 +171,10 @@ export const getInfinitePostsByPagination = [
       },
     };
 
-    const posts = await getPostsList(options);
+    const cacheKey = `posts:${JSON.stringify(req.query)}`;
+    const posts = await getOrSetCache(cacheKey, async () => {
+      return await getPostsList(options);
+    });
 
     const hasNextPage = posts.length > +limit; // > 5
 
