@@ -7,6 +7,7 @@
     "test": "jest",
     "dev": "nodemon --exec tsx src/index.ts",
     "work": "nodemon --exec tsx src/jobs/workers/imageWorker.ts",
+    "cache": "nodemon --exec tsx src/jobs/workers/cacheWorker.ts",
     "build": "tsc -p .",
     "start": "node dist/src/index.js"
   },
