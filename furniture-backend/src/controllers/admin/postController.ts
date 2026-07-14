@@ -21,6 +21,7 @@ import CacheQueue from "../../jobs/queues/cacheQueue";
 
 interface CustomRequest extends Request {
   userId?: number;
+  user?: any;
 }
 
 const removeFiles = async (
@@ -80,23 +81,23 @@ export const createPost = [
 
     const { title, content, body, category, type, tags } = req.body;
 
-    const userId = req.userId;
-
+    // const userId = req.userId;
+    const user = req.user;
     checkUploadFile(req.file);
 
-    const user = await getUserById(userId!);
-    if (!user) {
-      if (req.file) {
-        await removeFiles(req.file.filename, null);
-      }
-      return next(
-        createError(
-          "This phone has not been registered.",
-          401,
-          errorCode.unauthenticated,
-        ),
-      );
-    }
+    // const user = await getUserById(userId!);
+    // if (!user) {
+    //   if (req.file) {
+    //     await removeFiles(req.file.filename, null);
+    //   }
+    //   return next(
+    //     createError(
+    //       "This phone has not been registered.",
+    //       401,
+    //       errorCode.unauthenticated,
+    //     ),
+    //   );
+    // }
 
     const splitFileName = req.file?.filename.split(".")[0];
 
@@ -178,21 +179,21 @@ export const updatePost = [
 
     const { postId, title, content, body, category, type, tags } = req.body;
 
-    const userId = req.userId;
-
-    const user = await getUserById(userId!);
-    if (!user) {
-      if (req.file) {
-        await removeFiles(req.file.filename, null);
-      }
-      return next(
-        createError(
-          "This phone has not been registered.",
-          401,
-          errorCode.unauthenticated,
-        ),
-      );
-    }
+    // const userId = req.userId;
+    const user = req.user;
+    // const user = await getUserById(userId!);
+    // if (!user) {
+    //   if (req.file) {
+    //     await removeFiles(req.file.filename, null);
+    //   }
+    //   return next(
+    //     createError(
+    //       "This phone has not been registered.",
+    //       401,
+    //       errorCode.unauthenticated,
+    //     ),
+    //   );
+    // }
 
     const post = await getPostById(+postId); // "number" => int
     if (!post) {
@@ -281,9 +282,10 @@ export const deletePost = [
 
     const { postId } = req.body;
 
-    const userId = req.userId;
-    const user = await getUserById(userId!);
-    checkUserIfNotExist(user);
+    // const userId = req.userId;
+    // const user = await getUserById(userId!);
+    // checkUserIfNotExist(user);
+    const user = req.user;
 
     const post = await getPostById(+postId);
     checkModelIfExist(post);
