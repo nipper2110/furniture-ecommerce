@@ -9,6 +9,7 @@ import { createError } from "../../utils/error";
 import ImageQueue from "../../jobs/queues/imageQueue";
 import {
   createOneProduct,
+  deleteOneProduct,
   getProductById,
   updateOneProduct,
 } from "../../services/productService";
@@ -278,6 +279,45 @@ export const updateProduct = [
     res.status(200).json({
       message: "Successfully updated the product.",
       productId: productUpdated.id,
+    });
+  },
+];
+
+export const deleteProduct = [
+  body("productId", "Product Id is required").isInt({ min: 1 }),
+
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const errors = validationResult(req).array({ onlyFirstError: true });
+    if (errors.length > 0) {
+      return next(createError(errors[0].msg, 400, errorCode.invalid));
+    }
+
+    const { productId } = req.body;
+    const product = await getProductById(+productId);
+    checkModelIfExist(product);
+
+    const productDeleted = await deleteOneProduct(product!.id);
+
+    const orgFiles = product!.images.map((img) => img.path);
+    const optFiles = product!.images.map(
+      (img) => img.path.split(".")[0] + ".webp",
+    );
+    await removeFiles(orgFiles, optFiles);
+
+    await CacheQueue.add(
+      "invalidate-product-cache",
+      {
+        pattern: "products:*",
+      },
+      {
+        jobId: `invalidate-${Date.now()}`,
+        priority: 1,
+      },
+    );
+
+    res.status(201).json({
+      message: "Successfully deleted the product.",
+      postId: productDeleted.id,
     });
   },
 ];

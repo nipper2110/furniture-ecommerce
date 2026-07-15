@@ -11,6 +11,7 @@ import upload from "../../../middlewares/uploadFile";
 import {
   createProduct,
   updateProduct,
+  deleteProduct,
 } from "../../../controllers/admin/productController";
 
 const router = express.Router();
@@ -26,6 +27,6 @@ router.delete("/posts", deletePost);
 // CRUD for Products
 router.post("/products", upload.array("images", 4), createProduct);
 router.patch("/products", upload.array("images", 4), updateProduct);
-// router.delete("/products", deleteProduct);
+router.delete("/products", deleteProduct);
 
 export default router;
