@@ -197,11 +197,11 @@ export const confirmPassword = [
     .trim()
     .matches("^[0-9]+$")
     .isLength({ min: 6, max: 12 }),
-  body("password", "Passwrod must be 8 digits")
+  body("password", "Passwrod must be 6 digits")
     .notEmpty()
     .trim()
     .matches("^[0-9]+$")
-    .isLength({ min: 8, max: 8 }),
+    .isLength({ min: 6, max: 6 }),
   body("token", "Invalid Token").notEmpty().trim().escape(),
   async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
@@ -310,11 +310,11 @@ export const login = [
     .notEmpty()
     .matches("^[0-9]+$")
     .isLength({ min: 6, max: 12 }),
-  body("password", "Password must be 8 digits")
+  body("password", "Password must be 6 digits")
     .trim()
     .notEmpty()
     .matches("^[0-9]+$")
-    .isLength({ min: 8, max: 8 }),
+    .isLength({ min: 6, max: 6 }),
   async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
@@ -660,11 +660,11 @@ export const resetPassword = [
     .trim()
     .matches("^[0-9]+$")
     .isLength({ min: 6, max: 12 }),
-  body("password", "Passwrod must be 8 digits")
+  body("password", "Password must be 6 digits")
     .notEmpty()
     .trim()
     .matches("^[0-9]+$")
-    .isLength({ min: 8, max: 8 }),
+    .isLength({ min: 6, max: 6 }),
   body("token", "Invalid Token").notEmpty().trim().escape(),
   async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });

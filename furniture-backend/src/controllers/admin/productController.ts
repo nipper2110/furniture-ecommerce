@@ -151,7 +151,7 @@ export const createProduct = [
 
     res.status(201).json({
       message: "Successfully created a new product.",
-      postId: product.id,
+      productId: product.id,
     });
   },
 ];
