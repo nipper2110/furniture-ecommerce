@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { body, query, validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import path from "path";
 import { unlink } from "fs/promises";
 
@@ -63,6 +63,7 @@ export const createProduct = [
     .isFloat({ min: 0 })
     .isDecimal({ decimal_digits: "1,2" }),
   body("inventory", "Inventory is required.").isInt({ min: 1 }),
+  body("rating", "Rating is required.").isFloat({ min: 0.1, max: 5 }).toFloat(),
   body("category", "Category is required.").notEmpty().trim().escape(),
   body("type", "Type is required.").notEmpty().trim().escape(),
   body("tags", "Tag is invalid.")
@@ -88,6 +89,7 @@ export const createProduct = [
       description,
       price,
       discount,
+      rating,
       inventory,
       category,
       type,
@@ -129,6 +131,7 @@ export const createProduct = [
       description,
       price,
       discount,
+      rating,
       inventory: +inventory,
       category,
       type,
@@ -160,6 +163,7 @@ export const updateProduct = [
   body("productId", "Product Id is required").isInt({ min: 1 }),
   body("name", "Name is required.").notEmpty().trim().escape(),
   body("description", "Description is required.").notEmpty().trim().escape(),
+  body("rating", "Rating is required.").isFloat({ min: 0.1, max: 5 }).toFloat(),
   body("price", "Price is required.")
     .isFloat({ min: 0.1 })
     .isDecimal({ decimal_digits: "1,2" }),
@@ -191,6 +195,7 @@ export const updateProduct = [
       productId,
       name,
       description,
+      rating,
       price,
       discount,
       inventory,
@@ -222,6 +227,7 @@ export const updateProduct = [
       description,
       price,
       discount,
+      rating,
       inventory: +inventory,
       category,
       type,

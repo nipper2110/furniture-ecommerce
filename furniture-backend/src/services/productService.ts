@@ -6,6 +6,7 @@ export const createOneProduct = async (data: any) => {
     description: data.description,
     price: data.price,
     discount: data.discount,
+    rating: data.rating,
     inventory: data.inventory,
     category: {
       connectOrCreate: {
@@ -59,6 +60,7 @@ export const updateOneProduct = async (productId: number, data: any) => {
     description: data.description,
     price: data.price,
     discount: data.discount,
+    rating: data.rating,
     inventory: data.inventory,
     category: {
       connectOrCreate: {
@@ -106,5 +108,25 @@ export const updateOneProduct = async (productId: number, data: any) => {
 export const deleteOneProduct = async (id: number) => {
   return prisma.product.delete({
     where: { id },
+  });
+};
+
+export const getProductWithRelations = async (id: number) => {
+  return prisma.product.findUnique({
+    where: { id },
+    omit: {
+      categoryId: true,
+      typeId: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    include: {
+      images: {
+        select: {
+          id: true,
+          path: true,
+        },
+      },
+    },
   });
 };
