@@ -15,9 +15,10 @@ const BlogDetailPage = lazy(() => import("@/pages/blogs/BlogDetail"));
 import ProductRootLayout from "@/pages/products/ProductRootLayout";
 import ProductPage from "@/pages/products/Product";
 import ProductDetailPage from "@/pages/products/ProductDetail";
-
 import LoginPage from "@/pages/auth/Login";
 import RegisterPage from "@/pages/auth/Register";
+
+import { homeLoader } from "@/router/loader";
 
 export const router = createBrowserRouter([
   {
@@ -25,7 +26,7 @@ export const router = createBrowserRouter([
     Component: RootLayout,
     ErrorBoundary: ErrorPage,
     children: [
-      { index: true, Component: HomePage },
+      { index: true, Component: HomePage, loader: homeLoader },
       { path: "about", Component: AboutPage },
       {
         path: "blogs",

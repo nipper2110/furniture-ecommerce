@@ -9,9 +9,9 @@ const api = axios.create({
 });
 
 api.interceptors.response.use(
-  (respone) => respone,
+  (response) => response,
   (error) => {
-    if (error.respone.status === 401) {
+    if (error.response.status === 401) {
       window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`;
     }
     return Promise.reject(error);
