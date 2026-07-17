@@ -7,7 +7,7 @@ function Login() {
   return (
     <div className="relative">
       <Link
-        to="/"
+        to="#"
         className="text-foreground/80 hover:text-foreground fixed top-6 left-8 flex items-center text-lg font-bold tracking-tight transition-colors"
       >
         <Icons.logo className="mr-2 size-5" aria-hidden="true" />
