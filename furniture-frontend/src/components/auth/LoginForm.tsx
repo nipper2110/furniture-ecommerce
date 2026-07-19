@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Link, useSubmit, useNavigation } from "react-router";
+import { Link, useSubmit, useNavigation, useActionData } from "react-router";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -42,6 +42,10 @@ export default function LoginForm({
 }: React.ComponentProps<"div">) {
   const submit = useSubmit();
   const navigation = useNavigation();
+  const actionData = useActionData() as {
+    error?: string;
+    message?: string;
+  };
 
   const isSubmitting = navigation.state === "submitting";
 
@@ -135,9 +139,11 @@ export default function LoginForm({
                 />
               </div>
             </FieldGroup>
-
+            {actionData && (
+              <p className="text-xs text-red-400"> {actionData?.message}</p>
+            )}
             <div className="grid gap-4">
-              <Button type="submit" className="w-full cursor-pointer">
+              <Button type="submit" className="mt-2 w-full cursor-pointer">
                 {isSubmitting ? "Submitting..." : "Sign In"}
               </Button>
               <FieldSeparator>Or continue with</FieldSeparator>
