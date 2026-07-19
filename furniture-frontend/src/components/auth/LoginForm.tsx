@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Link } from "react-router";
+import { Link, useSubmit } from "react-router";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -40,6 +40,8 @@ export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const submit = useSubmit();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -49,8 +51,8 @@ export default function LoginForm({
   });
 
   function onSubmit(values: z.infer<typeof FormSchema>) {
-    console.log(values);
-    // Call api
+    // console.log(values);
+    submit(values, { method: "post", action: "/login" });
   }
 
   return (
@@ -132,17 +134,21 @@ export default function LoginForm({
             </FieldGroup>
 
             <div className="grid gap-4">
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full cursor-pointer">
                 Sign In
               </Button>
               <FieldSeparator>Or continue with</FieldSeparator>
-              <Button variant="outline" className="w-full" type="button">
+              <Button
+                variant="outline"
+                className="w-full cursor-pointer"
+                type="button"
+              >
                 Sign In with Google
               </Button>
 
               <FieldDescription className="text-center">
                 Don&apos;t have an account?{" "}
-                <Link to="/register" className="underline">
+                <Link to="/register" className="cursor-pointer underline">
                   Sign Up
                 </Link>
               </FieldDescription>
