@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Link, useSubmit } from "react-router";
+import { Link, useSubmit, useNavigation } from "react-router";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -41,6 +41,9 @@ export default function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const submit = useSubmit();
+  const navigation = useNavigation();
+
+  const isSubmitting = navigation.state === "submitting";
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -135,7 +138,7 @@ export default function LoginForm({
 
             <div className="grid gap-4">
               <Button type="submit" className="w-full cursor-pointer">
-                Sign In
+                {isSubmitting ? "Submitting..." : "Sign In"}
               </Button>
               <FieldSeparator>Or continue with</FieldSeparator>
               <Button
