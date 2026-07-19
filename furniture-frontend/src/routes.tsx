@@ -19,7 +19,7 @@ import LoginPage from "@/pages/auth/Login";
 import RegisterPage from "@/pages/auth/Register";
 
 import { homeLoader } from "@/router/loader";
-import { loginAction } from "@/router/action";
+import { loginAction, logoutAction } from "@/router/action";
 
 export const router = createBrowserRouter([
   {
@@ -65,5 +65,10 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     Component: RegisterPage,
+  },
+
+  {
+    path: "/logout",
+    action: logoutAction,
   },
 ]);
