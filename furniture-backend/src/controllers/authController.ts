@@ -764,3 +764,23 @@ export const resetPassword = [
       });
   },
 ];
+
+interface CustomRequest extends Request {
+  userId?: number;
+}
+export const authCheck = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = req.userId;
+  const user = await getUserById(userId!);
+  checkUserIfNotExist(user);
+
+  res.status(200).json({
+    message: "You are authenticated.",
+    userId: user?.id,
+    username: user?.firstName + " " + user?.lastName,
+    image: user?.image,
+  });
+};

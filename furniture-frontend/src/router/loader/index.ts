@@ -1,4 +1,5 @@
-import api from "@/api";
+import api, { authApi } from "@/api";
+import { redirect } from "react-router";
 
 export const homeLoader = async () => {
   try {
@@ -6,5 +7,19 @@ export const homeLoader = async () => {
     return respone.data;
   } catch (error) {
     console.log("HomeLoader error: ", error);
+  }
+};
+
+export const loginLoader = async () => {
+  try {
+    const respone = await authApi.get("auth-check");
+
+    if (respone.status !== 200) {
+      return null;
+    }
+
+    return redirect("/");
+  } catch (error) {
+    console.log("Loader error: ", error);
   }
 };

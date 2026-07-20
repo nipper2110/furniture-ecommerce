@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, redirect } from "react-router";
 
 import RootLayout from "@/pages/RootLayout";
 import HomePage from "@/pages/Home";
@@ -18,7 +18,7 @@ import ProductDetailPage from "@/pages/products/ProductDetail";
 import LoginPage from "@/pages/auth/Login";
 import RegisterPage from "@/pages/auth/Register";
 
-import { homeLoader } from "@/router/loader";
+import { homeLoader, loginLoader } from "@/router/loader";
 import { loginAction, logoutAction } from "@/router/action";
 
 export const router = createBrowserRouter([
@@ -59,6 +59,7 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     Component: LoginPage,
+    loader: loginLoader,
     action: loginAction,
   },
 
@@ -70,5 +71,6 @@ export const router = createBrowserRouter([
   {
     path: "/logout",
     action: logoutAction,
+    loader: () => redirect("/"),
   },
 ]);
