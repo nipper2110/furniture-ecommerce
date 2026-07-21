@@ -16,10 +16,13 @@ import ProductRootLayout from "@/pages/products/ProductRootLayout";
 import ProductPage from "@/pages/products/Product";
 import ProductDetailPage from "@/pages/products/ProductDetail";
 import LoginPage from "@/pages/auth/Login";
-import RegisterPage from "@/pages/auth/Register";
+import AuthRootLayout from "@/pages/auth/AuthRootLayout";
 
 import { homeLoader, loginLoader } from "@/router/loader";
 import { loginAction, logoutAction } from "@/router/action";
+import SignUpPage from "@/pages/auth/SignUp";
+import OtpPage from "@/pages/auth/Otp";
+import ConfirmPasswordPage from "@/pages/auth/confirmPassword";
 
 export const router = createBrowserRouter([
   {
@@ -65,7 +68,12 @@ export const router = createBrowserRouter([
 
   {
     path: "/register",
-    Component: RegisterPage,
+    Component: AuthRootLayout,
+    children: [
+      { index: true, Component: SignUpPage },
+      { path: "otp", Component: OtpPage },
+      { path: "confirm-password", Component: ConfirmPasswordPage },
+    ],
   },
 
   {
