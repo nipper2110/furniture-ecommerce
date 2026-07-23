@@ -18,8 +18,14 @@ import ProductDetailPage from "@/pages/products/ProductDetail";
 import LoginPage from "@/pages/auth/Login";
 import AuthRootLayout from "@/pages/auth/AuthRootLayout";
 
-import { homeLoader, loginLoader, otpLoader } from "@/router/loader";
 import {
+  confirmLoader,
+  homeLoader,
+  loginLoader,
+  otpLoader,
+} from "@/router/loader";
+import {
+  confirmAction,
   loginAction,
   logoutAction,
   otpAction,
@@ -82,7 +88,12 @@ export const router = createBrowserRouter([
         action: registerAction,
       },
       { path: "otp", Component: OtpPage, loader: otpLoader, action: otpAction },
-      { path: "confirm-password", Component: ConfirmPasswordPage },
+      {
+        path: "confirm-password",
+        Component: ConfirmPasswordPage,
+        loader: confirmLoader,
+        action: confirmAction,
+      },
     ],
   },
 

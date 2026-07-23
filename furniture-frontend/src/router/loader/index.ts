@@ -34,3 +34,13 @@ export const otpLoader = async () => {
 
   return null;
 };
+
+export const confirmLoader = async () => {
+  const authStore = useAuthStore.getState();
+
+  if (authStore.status !== Status.confirm) {
+    return redirect("/register");
+  }
+
+  return null;
+};
