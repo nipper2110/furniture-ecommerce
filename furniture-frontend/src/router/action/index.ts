@@ -59,7 +59,11 @@ export const registerAction = async ({ request }: ActionFunctionArgs) => {
       return { error: response.data || "Sending OTP failed!" };
     }
 
-    authStore.setAuth(response.data.phone, response.data.token, Status.otp);
+    authStore.setAuth(
+      response.data.phone,
+      response.data.rememberToken,
+      Status.otp,
+    );
 
     return redirect("/register/otp");
   } catch (error) {
@@ -109,7 +113,7 @@ export const confirmAction = async ({ request }: ActionFunctionArgs) => {
   try {
     const response = await authApi.post("confirm-password", credentials);
 
-    if (response.status !== 200) {
+    if (response.status !== 201) {
       return { error: response.data || "Registration failed!" };
     }
 
