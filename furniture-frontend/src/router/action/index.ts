@@ -2,6 +2,7 @@ import { redirect, type ActionFunctionArgs } from "react-router";
 import { AxiosError } from "axios";
 
 import api, { authApi } from "@/api";
+import useAuthStore, { Status } from "@/store/authStore";
 
 export const loginAction = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -43,5 +44,28 @@ export const logoutAction = async () => {
     return redirect("/login");
   } catch (error) {
     console.log("Logout failed!", error);
+  }
+};
+
+export const registerAction = async ({ request }: ActionFunctionArgs) => {
+  const authStore = useAuthStore.getState();
+  const formData = await request.formData();
+  const credentials = Object.fromEntries(formData);
+
+  try {
+    const response = await authApi.post("register", credentials);
+
+    if (response.status !== 200) {
+      return { error: response.data || "Sending OTP failed!" };
+    }
+
+    // client state management
+    authStore.setAuth(response.data.phone, response.data.token, Status.otp);
+
+    return redirect("/register/otp");
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data || { error: "Sending OTP failed!" };
+    } else throw error;
   }
 };

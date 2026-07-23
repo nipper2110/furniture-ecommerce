@@ -19,7 +19,7 @@ import LoginPage from "@/pages/auth/Login";
 import AuthRootLayout from "@/pages/auth/AuthRootLayout";
 
 import { homeLoader, loginLoader } from "@/router/loader";
-import { loginAction, logoutAction } from "@/router/action";
+import { loginAction, logoutAction, registerAction } from "@/router/action";
 import SignUpPage from "@/pages/auth/SignUp";
 import OtpPage from "@/pages/auth/Otp";
 import ConfirmPasswordPage from "@/pages/auth/confirmPassword";
@@ -70,7 +70,12 @@ export const router = createBrowserRouter([
     path: "/register",
     Component: AuthRootLayout,
     children: [
-      { index: true, Component: SignUpPage },
+      {
+        index: true,
+        Component: SignUpPage,
+        loader: loginLoader,
+        action: registerAction,
+      },
       { path: "otp", Component: OtpPage },
       { path: "confirm-password", Component: ConfirmPasswordPage },
     ],
