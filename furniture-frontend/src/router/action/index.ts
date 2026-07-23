@@ -59,13 +59,39 @@ export const registerAction = async ({ request }: ActionFunctionArgs) => {
       return { error: response.data || "Sending OTP failed!" };
     }
 
-    // client state management
     authStore.setAuth(response.data.phone, response.data.token, Status.otp);
 
     return redirect("/register/otp");
   } catch (error) {
     if (error instanceof AxiosError) {
       return error.response?.data || { error: "Sending OTP failed!" };
+    } else throw error;
+  }
+};
+
+export const otpAction = async ({ request }: ActionFunctionArgs) => {
+  const authStore = useAuthStore.getState();
+  const formData = await request.formData();
+
+  const credentials = {
+    phone: authStore.phone,
+    otp: formData.get("otp"),
+    token: authStore.token,
+  };
+
+  try {
+    const response = await authApi.post("verify-otp", credentials);
+
+    if (response.status !== 200) {
+      return { error: response.data || "Verifying OTP failed!" };
+    }
+
+    authStore.setAuth(response.data.phone, response.data.token, Status.confirm);
+
+    return redirect("/register/confirm-password");
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data || { error: "Verifying OTP failed!" };
     } else throw error;
   }
 };
