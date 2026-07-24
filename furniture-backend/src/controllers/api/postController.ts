@@ -136,7 +136,7 @@ export const getPostsByPagination = [
 export const getInfinitePostsByPagination = [
   query("cursor", "Cursor must be Post ID.").isInt({ gt: 0 }).optional(),
   query("limit", "Limit number must be unsigned integer.")
-    .isInt({ gt: 4 })
+    .isInt({ gt: 2 })
     .optional(),
 
   async (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -169,7 +169,7 @@ export const getInfinitePostsByPagination = [
         },
       },
       orderBy: {
-        id: "asc",
+        id: "desc",
       },
     };
 
