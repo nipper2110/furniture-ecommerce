@@ -20,7 +20,7 @@ import AuthRootLayout from "@/pages/auth/AuthRootLayout";
 
 import {
   confirmLoader,
-  homeLoader,
+  // homeLoader,
   loginLoader,
   otpLoader,
 } from "@/router/loader";
@@ -41,7 +41,11 @@ export const router = createBrowserRouter([
     Component: RootLayout,
     ErrorBoundary: ErrorPage,
     children: [
-      { index: true, Component: HomePage, loader: homeLoader },
+      {
+        index: true,
+        Component: HomePage,
+        // loader: homeLoader
+      },
       { path: "about", Component: AboutPage },
       {
         path: "blogs",
