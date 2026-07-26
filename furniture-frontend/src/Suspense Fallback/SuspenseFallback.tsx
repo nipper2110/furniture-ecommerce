@@ -1,5 +1,7 @@
+import LoadingCard from "@/components/loading-card";
+
 function SuspenseFallback() {
-  return <div className="text-center">Loading</div>;
+  return <LoadingCard />;
 }
 
 export default SuspenseFallback;

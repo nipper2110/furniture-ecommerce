@@ -34,6 +34,7 @@ import {
 import SignUpPage from "@/pages/auth/SignUp";
 import OtpPage from "@/pages/auth/Otp";
 import ConfirmPasswordPage from "@/pages/auth/ConfirmPassword";
+// import BlogRootLayout from "@/pages/blogs/BlogRootLayout";
 
 export const router = createBrowserRouter([
   {
@@ -50,12 +51,14 @@ export const router = createBrowserRouter([
       {
         path: "blogs",
         // Component: BlogRootLayout,
+        // loader: blogInfiniteLoader,
 
         lazy: async () => {
           const module = await import("@/pages/blogs/BlogRootLayout");
-
+          const { blogInfiniteLoader } = await import("@/router/loader");
           return {
             Component: module.default,
+            loader: blogInfiniteLoader,
           };
         },
         children: [

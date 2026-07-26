@@ -1,5 +1,10 @@
 import { authApi } from "@/api";
-import { postQuery, productQuery, queryClient } from "@/api/query";
+import {
+  postInfiniteQuery,
+  postQuery,
+  productQuery,
+  queryClient,
+} from "@/api/query";
 import useAuthStore, { Status } from "@/store/authStore";
 import { redirect } from "react-router";
 
@@ -56,5 +61,10 @@ export const confirmLoader = async () => {
     return redirect("/register");
   }
 
+  return null;
+};
+
+export const blogInfiniteLoader = async () => {
+  await queryClient.ensureInfiniteQueryData(postInfiniteQuery());
   return null;
 };
