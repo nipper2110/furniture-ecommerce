@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import Counch from "@/data/images/couch.png";
 import { Button } from "@/components/ui/button";
 import CarouselCard from "@/components/products/CarouselCard";
@@ -7,8 +7,8 @@ import BlogCard from "@/components/blogs/BlogCard";
 import ProductCard from "@/components/products/ProductCard";
 import type { Product } from "@/types";
 import { postQuery, productQuery } from "@/api/query";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+// import { Skeleton } from "@/components/ui/skeleton";
+// import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 function Title({
   title,
@@ -32,58 +32,61 @@ function Title({
 function Home() {
   // const { productsData, postsData } = useLoaderData();
 
-  const {
-    data: productsData,
-    isLoading: isLoadingProduct,
-    isError: isErrorProduct,
-    error: errorProduct,
-    refetch: refetchProduct,
-  } = useQuery(productQuery("?limit=8"));
+  // const {
+  //   data: productsData,
+  //   isLoading: isLoadingProduct,
+  //   isError: isErrorProduct,
+  //   error: errorProduct,
+  //   refetch: refetchProduct,
+  // } = useQuery(productQuery("?limit=8"));
 
-  const {
-    data: postsData,
-    isLoading: isLoadingPost,
-    isError: isErrorPost,
-    error: errorPost,
-    refetch: refetchPost,
-  } = useQuery(postQuery("?limit=3"));
+  // const {
+  //   data: postsData,
+  //   isLoading: isLoadingPost,
+  //   isError: isErrorPost,
+  //   error: errorPost,
+  //   refetch: refetchPost,
+  // } = useQuery(postQuery("?limit=3"));
 
-  if (isLoadingProduct && isLoadingPost) {
-    return (
-      <div className="flex min-h-[70vh] w-full items-center justify-center">
-        <Card className="w-full max-w-xs">
-          <CardHeader>
-            <Skeleton className="h-4 w-2/3" />
-            <Skeleton className="h-4 w-1/2" />
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="aspect-video w-full" />
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // if (isLoadingProduct && isLoadingPost) {
+  //   return (
+  //     <div className="flex min-h-[70vh] w-full items-center justify-center">
+  //       <Card className="w-full max-w-xs">
+  //         <CardHeader>
+  //           <Skeleton className="h-4 w-2/3" />
+  //           <Skeleton className="h-4 w-1/2" />
+  //         </CardHeader>
+  //         <CardContent>
+  //           <Skeleton className="aspect-video w-full" />
+  //         </CardContent>
+  //       </Card>
+  //     </div>
+  //   );
+  // }
 
-  if (isErrorProduct && isErrorPost) {
-    return (
-      <div className="container mx-auto my-32 flex flex-1 place-content-center">
-        <div className="text-center text-red-400">
-          <p className="mb-4">
-            {errorProduct.message} & {errorPost.message}
-          </p>
-          <Button
-            onClick={() => {
-              refetchProduct();
-              refetchPost();
-            }}
-            variant="secondary"
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // if (isErrorProduct && isErrorPost) {
+  //   return (
+  //     <div className="container mx-auto my-32 flex flex-1 place-content-center">
+  //       <div className="text-center text-red-400">
+  //         <p className="mb-4">
+  //           {errorProduct.message} & {errorPost.message}
+  //         </p>
+  //         <Button
+  //           onClick={() => {
+  //             refetchProduct();
+  //             refetchPost();
+  //           }}
+  //           variant="secondary"
+  //         >
+  //           Retry
+  //         </Button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+  const { data: productsData } = useSuspenseQuery(productQuery("?limit=8"));
+  const { data: postsData } = useSuspenseQuery(postQuery("?limit=3"));
 
   return (
     <div className="container mx-auto">
