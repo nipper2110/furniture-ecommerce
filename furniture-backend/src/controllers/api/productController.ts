@@ -80,7 +80,7 @@ export const getProductsByPagination = [
       typeList = type
         .toString()
         .split(",")
-        .map((t) => Number())
+        .map((t) => Number(t))
         .filter((t) => t > 0);
     }
 

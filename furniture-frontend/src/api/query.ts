@@ -82,9 +82,9 @@ const fetchInfiniteProducts = async ({
 }) => {
   let query = pageParam ? `?limit=9&cursor=${pageParam}` : "?limit=9";
 
-  if (categories) query += `&categories=${categories}`;
+  if (categories) query += `&category=${categories}`;
 
-  if (types) query += `&types=${types}`;
+  if (types) query += `&type=${types}`;
 
   const respone = await api.get(`users/products${query}`);
   return respone.data;
