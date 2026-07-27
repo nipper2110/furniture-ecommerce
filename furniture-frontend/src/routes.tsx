@@ -23,6 +23,7 @@ import {
   homeLoader,
   loginLoader,
   otpLoader,
+  postLoader,
 } from "@/router/loader";
 import {
   confirmAction,
@@ -63,7 +64,7 @@ export const router = createBrowserRouter([
         },
         children: [
           { index: true, Component: BlogPage },
-          { path: ":postId", Component: BlogDetailPage },
+          { path: ":postId", Component: BlogDetailPage, loader: postLoader },
         ],
       },
       {
