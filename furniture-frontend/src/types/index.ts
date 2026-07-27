@@ -49,8 +49,8 @@ export type Post = {
 };
 
 export type Category = {
-  id: string;
-  label: string;
+  id: number;
+  name: string;
 };
 
 export type User = {

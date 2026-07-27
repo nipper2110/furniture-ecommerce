@@ -24,6 +24,7 @@ import {
   loginLoader,
   otpLoader,
   postLoader,
+  productInfiniteLoader,
 } from "@/router/loader";
 import {
   confirmAction,
@@ -71,7 +72,11 @@ export const router = createBrowserRouter([
         path: "products",
         Component: ProductRootLayout,
         children: [
-          { index: true, Component: ProductPage },
+          {
+            index: true,
+            Component: ProductPage,
+            loader: productInfiniteLoader,
+          },
           { path: ":productId", Component: ProductDetailPage },
         ],
       },

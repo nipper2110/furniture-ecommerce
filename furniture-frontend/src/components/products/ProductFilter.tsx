@@ -16,7 +16,12 @@ import {
 import type { Category } from "@/types";
 
 interface FilterProps {
-  filterList: { categories: Category[]; types: Category[] };
+  categories: Category[];
+  types: Category[];
+}
+
+interface ProductFilterProps {
+  filterList: FilterProps;
 }
 
 const formSchema = z.object({
@@ -30,7 +35,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function ProductFilter({ filterList }: FilterProps) {
+export default function ProductFilter({ filterList }: ProductFilterProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,29 +60,31 @@ export default function ProductFilter({ filterList }: FilterProps) {
                 <FieldLegend variant="label">Furniture Made By</FieldLegend>
 
                 <FieldGroup data-slot="checkbox-group">
-                  {filterList.categories.map((task) => (
+                  {filterList.categories.map((item) => (
                     <Field
-                      key={task.id}
+                      key={item.id}
                       orientation="horizontal"
                       data-invalid={fieldState.invalid}
                     >
                       <Checkbox
-                        id={`form-rhf-checkbox-${task.id}`}
+                        id={`form-rhf-checkbox-${item.id}`}
                         name={field.name}
                         aria-invalid={fieldState.invalid}
-                        checked={field.value.includes(task.id)}
+                        checked={field.value.includes(item.id.toString())}
                         onCheckedChange={(checked) => {
                           const newValue = checked
-                            ? [...field.value, task.id]
-                            : field.value.filter((value) => value !== task.id);
+                            ? [...field.value, item.id.toString()]
+                            : field.value.filter(
+                                (value) => value !== item.id.toString(),
+                              );
                           field.onChange(newValue);
                         }}
                       />
                       <FieldLabel
-                        htmlFor={`form-rhf-checkbox-${task.id}`}
+                        htmlFor={`form-rhf-checkbox-${item.id}`}
                         className="font-normal"
                       >
-                        {task.label}
+                        {item.name}
                       </FieldLabel>
                     </Field>
                   ))}
@@ -99,29 +106,31 @@ export default function ProductFilter({ filterList }: FilterProps) {
                 <FieldLegend variant="label">Furniture Types</FieldLegend>
 
                 <FieldGroup data-slot="checkbox-group">
-                  {filterList.types.map((task) => (
+                  {filterList.types.map((item) => (
                     <Field
-                      key={task.id}
+                      key={item.id}
                       orientation="horizontal"
                       data-invalid={fieldState.invalid}
                     >
                       <Checkbox
-                        id={`form-rhf-checkbox-${task.id}`}
+                        id={`form-rhf-checkbox-${item.id.toString()}`}
                         name={field.name}
                         aria-invalid={fieldState.invalid}
-                        checked={field.value.includes(task.id)}
+                        checked={field.value.includes(item.id.toString())}
                         onCheckedChange={(checked) => {
                           const newValue = checked
-                            ? [...field.value, task.id]
-                            : field.value.filter((value) => value !== task.id);
+                            ? [...field.value, item.id.toString()]
+                            : field.value.filter(
+                                (value) => value !== item.id.toString(),
+                              );
                           field.onChange(newValue);
                         }}
                       />
                       <FieldLabel
-                        htmlFor={`form-rhf-checkbox-${task.id}`}
+                        htmlFor={`form-rhf-checkbox-${item.id}`}
                         className="font-normal"
                       >
-                        {task.label}
+                        {item.name}
                       </FieldLabel>
                     </Field>
                   ))}
