@@ -13,7 +13,7 @@ export interface MainNavItem {
   menu?: NavItem[];
 }
 
-type Image = {
+export type Image = {
   id: number;
   path: string;
 };
