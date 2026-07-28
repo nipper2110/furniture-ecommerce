@@ -73,6 +73,7 @@ model Product {
   updatedAt   DateTime           @updatedAt
   orders      ProductsOnOrders[]
   tags        ProductTag[]
+  users       User[]
 }
 
 model Image {
@@ -99,6 +100,7 @@ model User {
   updatedAt       DateTime  @updatedAt
   posts           Post[]
   orders          Order[]
+  products        Product[]
 }
 
 model PostTag {
