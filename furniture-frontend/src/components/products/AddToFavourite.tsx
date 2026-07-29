@@ -8,8 +8,8 @@ interface FavouriteProp extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 function AddToFavourite({
-  productId,
-  rating,
+  // productId,
+  // rating,
   className,
   ...props
 }: FavouriteProp) {
@@ -20,7 +20,8 @@ function AddToFavourite({
       className={cn("size-8 shrink-0", className)}
       {...props}
     >
-      <Icons.heart className="size-4" />
+      {/* <Icons.heart className="size-4 text-red-500" /> */}
+      <Icons.heartFill className="size-4 text-red-500" />
     </Button>
   );
 }

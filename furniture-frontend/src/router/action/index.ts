@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 
 import api, { authApi } from "@/api";
 import useAuthStore, { Status } from "@/store/authStore";
+import { queryClient } from "@/api/query";
 
 export const loginAction = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -123,6 +124,40 @@ export const confirmAction = async ({ request }: ActionFunctionArgs) => {
   } catch (error) {
     if (error instanceof AxiosError) {
       return error.response?.data || { error: "Registration failed!" };
+    } else throw error;
+  }
+};
+
+export const favouriteAction = async ({
+  request,
+  params,
+}: ActionFunctionArgs) => {
+  const formData = await request.formData();
+
+  if (!params.productId) {
+    throw new Error("No Product ID provided.");
+  }
+
+  const data = {
+    productId: params.productId,
+    favourite: formData.get("favourite") === "true",
+  };
+
+  try {
+    const response = await api.patch("users/products/toggle-favourite", data);
+
+    if (response.status !== 200) {
+      return { error: response.data || "Setting favourite failed!" };
+    }
+
+    await queryClient.invalidateQueries({
+      queryKey: ["products", "detail", params.productId],
+    });
+
+    return null;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data || { error: "Setting favourite failed!" };
     } else throw error;
   }
 };
