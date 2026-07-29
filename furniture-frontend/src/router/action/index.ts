@@ -139,7 +139,7 @@ export const favouriteAction = async ({
   }
 
   const data = {
-    productId: params.productId,
+    productId: Number(params.productId),
     favourite: formData.get("favourite") === "true",
   };
 
