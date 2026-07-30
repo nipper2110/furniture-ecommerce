@@ -15,7 +15,7 @@ interface CartState {
 }
 
 interface CartAction {
-  getTotalItem: () => number;
+  getTotalItems: () => number;
   getTotalPrice: () => number;
   addItem: (item: CartItem) => void;
   updateItem: (id: number, quantity: number) => void;
@@ -31,7 +31,7 @@ export const useCartStore = create<CartState & CartAction>()(
   persist(
     immer((set, get) => ({
       ...initialState,
-      getTotalItem: () => {
+      getTotalItems: () => {
         const { carts } = get();
         return carts.reduce((total, product) => total + product.quantity, 0);
       },

@@ -12,15 +12,19 @@ import {
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { cartItems } from "@/data/cart";
+// import { cartItems } from "@/data/cart";
 import { Icons } from "@/components/icons";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import CartItem from "../carts/CartItem";
 import { formatPrice } from "@/lib/utils";
+import { useCartStore } from "@/store/cartStore";
 
 export default function CartSheet() {
-  const itemCount = 4;
-  const amountTotal = 190;
+  // const itemCount = 4;
+  // const amountTotal = 190;
+  const itemCount = useCartStore((state) => state.getTotalItems());
+  const amountTotal = useCartStore((state) => state.getTotalPrice());
+  const { carts } = useCartStore();
 
   return (
     <Sheet>
@@ -31,25 +35,30 @@ export default function CartSheet() {
           className="relative"
           aria-label="Open cart"
         >
-          <Badge
-            variant="destructive"
-            className="absolute -top-2 -right-2 size-6 justify-center rounded-full p-2.5"
-          >
-            {itemCount}
-          </Badge>
+          {itemCount > 0 && (
+            <Badge
+              variant="destructive"
+              className="absolute -top-2 -right-2 size-6 justify-center rounded-full p-2.5"
+            >
+              {itemCount}
+            </Badge>
+          )}
+
           <Icons.cart className="size-4" aria-hidden="true" />
         </Button>
       </SheetTrigger>
       <SheetContent className="container w-full md:max-w-lg">
         <SheetHeader className="items-center">
-          <SheetTitle className="mb-2">Cart - {itemCount}</SheetTitle>
+          <SheetTitle className="mb-2">
+            {itemCount > 0 ? `Cart - ${itemCount}` : "Empty Cart"}
+          </SheetTitle>
           <Separator />
         </SheetHeader>
-        {cartItems.length > 0 ? (
+        {carts.length > 0 ? (
           <>
             <ScrollArea className="h-[calc(100vh-34vh)] pb-8">
-              {cartItems.map((cart) => (
-                <CartItem cart={cart} />
+              {carts.map((cart) => (
+                <CartItem cart={cart} key={cart.id} />
               ))}
             </ScrollArea>
 
