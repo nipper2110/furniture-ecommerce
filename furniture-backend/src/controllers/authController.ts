@@ -757,7 +757,7 @@ export const resetPassword = [
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         path: "/",
       })
-      .status(201)
+      .status(200)
       .json({
         message: "Successfully reset your password.",
         userId: user!.id,
