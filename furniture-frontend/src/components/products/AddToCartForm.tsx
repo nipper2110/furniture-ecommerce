@@ -72,7 +72,11 @@ export default function AddToCartForm({
     // console.log(values);
     // Call api
     onHandleCart(Number(values.quantity));
-    toast.success("Product is addede to cart successfully.");
+    toast.success(
+      cartItem
+        ? "Updated cart successfully."
+        : "Product is added to cart successfully.",
+    );
   }
 
   return (
