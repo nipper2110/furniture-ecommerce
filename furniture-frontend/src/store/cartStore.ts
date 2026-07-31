@@ -52,7 +52,7 @@ export const useCartStore = create<CartState & CartAction>()(
           } else {
             state.carts.push({ ...item, quantity: item.quantity || 1 });
           }
-          state.carts.push(item);
+          // state.carts.push(item);
         }),
 
       updateItem: (id, quantity) =>

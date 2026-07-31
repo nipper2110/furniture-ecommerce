@@ -56,7 +56,7 @@ export default function Editable({
   };
 
   const handleIncrease = () => {
-    const newQuantity = Math.max(currentQuantity + 1, 9999); // Max limit 9999
+    const newQuantity = Math.min(currentQuantity + 1, 9999); // Max limit 9999
     setValue("quantity", newQuantity.toString(), { shouldValidate: true });
     onUpdate(newQuantity);
   };
@@ -96,7 +96,7 @@ export default function Editable({
                       min={0}
                       inputMode="numeric"
                       autoComplete="off"
-                      className="h-8 w-16 rounded-none border-x-0"
+                      className="h-8 w-16 [appearance:textfield] rounded-none border-x-0 text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     />
 
                     {fieldState.invalid && (
