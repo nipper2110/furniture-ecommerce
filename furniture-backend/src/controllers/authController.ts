@@ -815,7 +815,7 @@ export const changePassword = [
     );
     if (!isMatchPassword) {
       return next(
-        createError("Current password is incorrect.", 401, errorCode.invalid),
+        createError("Current password is incorrect.", 400, errorCode.invalid),
       );
     }
 

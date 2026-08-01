@@ -15,12 +15,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useState } from "react";
+import { ChangePasswordForm } from "@/components/auth/ChangePasswordForm";
 
 interface UserProps {
   user: User;
 }
 
 function AuthDropDown({ user }: UserProps) {
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+
   if (!user) {
     return (
       <Button asChild>
@@ -57,6 +62,7 @@ function AuthDropDown({ user }: UserProps) {
                 </p>
               </div>
             </DropdownMenuLabel>
+
             <DropdownMenuItem asChild>
               <Link to="#">
                 <Icons.dashboard className="mr-2 size-4" aria-hidden="true" />
@@ -64,13 +70,15 @@ function AuthDropDown({ user }: UserProps) {
                 <DropdownMenuShortcut>⇧⌘D</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
+
             <DropdownMenuItem asChild>
               <Link to="#">
-                <Icons.dashboard className="mr-2 size-4" aria-hidden="true" />
+                <Icons.billing className="mr-2 size-4" aria-hidden="true" />
                 Billing
                 <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
+
             <DropdownMenuItem asChild>
               <Link to="#">
                 <Icons.gear className="mr-2 size-4" aria-hidden="true" />
@@ -78,25 +86,37 @@ function AuthDropDown({ user }: UserProps) {
                 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
+
+            <DropdownMenuItem onSelect={() => setChangePasswordOpen(true)}>
+              <Icons.password className="mr-2 size-4" aria-hidden="true" />
+              Change Password
+              <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <DropdownMenuItem asChild>
-              {/* <Link to="/login">
+            {/* <Link to="/login">
                 <Icons.exit className="mr-2 size-4" aria-hidden="true" />
                 Log out
                 <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
               </Link> */}
 
-              <Form method="post" action="/logout">
-                <button type="submit" className="w-full">
-                  Logout
-                </button>
-              </Form>
-            </DropdownMenuItem>
+            <Form method="post" action="/logout">
+              <button type="submit" className="w-full">
+                Logout
+              </button>
+            </Form>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Dialog open={changePasswordOpen} onOpenChange={setChangePasswordOpen}>
+        <DialogContent>
+          <ChangePasswordForm
+            onSuccess={() => setChangePasswordOpen(false)}
+          />{" "}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
