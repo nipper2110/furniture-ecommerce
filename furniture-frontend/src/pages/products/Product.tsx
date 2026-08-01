@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
+import { useEffect } from "react";
 
 import ProductCard from "@/components/products/ProductCard";
 // import { products, filterList } from "@/data/products";
@@ -13,8 +14,22 @@ import {
 import LoadingCard from "@/components/loading-card";
 import { Button } from "@/components/ui/button";
 
+const PRODUCT_FILTER_STORAGE_KEY = "productFilters";
+
 function Product() {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.toString()) return;
+
+    const savedFilters = sessionStorage.getItem(PRODUCT_FILTER_STORAGE_KEY);
+
+    if (savedFilters) {
+      setSearchParams(new URLSearchParams(savedFilters), {
+        replace: true,
+      });
+    }
+  }, [searchParams, setSearchParams]);
 
   const rawCategory = searchParams.get("categories");
   const rawType = searchParams.get("types");
@@ -58,11 +73,21 @@ function Product() {
 
   const handleFilterChange = (categories: string[], types: string[]) => {
     const newParams = new URLSearchParams();
+
     if (categories.length > 0) {
-      newParams.set("categories", encodeURIComponent(categories.join(",")));
+      newParams.set("categories", categories.join(","));
     }
+
     if (types.length > 0) {
-      newParams.set("types", encodeURIComponent(types.join(",")));
+      newParams.set("types", types.join(","));
+    }
+
+    const queryString = newParams.toString();
+
+    if (queryString) {
+      sessionStorage.setItem(PRODUCT_FILTER_STORAGE_KEY, queryString);
+    } else {
+      sessionStorage.removeItem(PRODUCT_FILTER_STORAGE_KEY);
     }
 
     // Updates URL & triggers refetch via query key

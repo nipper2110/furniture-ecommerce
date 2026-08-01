@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { useEffect } from "react";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,13 @@ export default function ProductFilter({
       types: selectedType,
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      categories: selectedCategory,
+      types: selectedType,
+    });
+  }, [form, selectedCategory, selectedType]);
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     // console.log("Submit data...", data);

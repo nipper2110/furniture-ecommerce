@@ -784,3 +784,101 @@ export const authCheck = async (
     image: user?.image,
   });
 };
+
+export const changePassword = [
+  body("currentPassword", "Password must be 6 digits")
+    .notEmpty()
+    .trim()
+    .matches("^[0-9]+$")
+    .isLength({ min: 6, max: 6 }),
+  body("newPassword", "Password must be 6 digits")
+    .notEmpty()
+    .trim()
+    .matches("^[0-9]+$")
+    .isLength({ min: 6, max: 6 }),
+
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const errors = validationResult(req).array({ onlyFirstError: true });
+    if (errors.length > 0) {
+      return next(createError(errors[0].msg, 400, errorCode.invalid));
+    }
+
+    const { currentPassword, newPassword } = req.body;
+
+    const userId = req.userId;
+    const user = await getUserById(userId!);
+    checkUserIfNotExist(user);
+
+    const isMatchPassword = await bcrypt.compare(
+      currentPassword,
+      user!.password,
+    );
+    if (!isMatchPassword) {
+      return next(
+        createError("Current password is incorrect.", 401, errorCode.invalid),
+      );
+    }
+
+    if (currentPassword === newPassword) {
+      return next(
+        createError(
+          "New password must not be same with current password.",
+          400,
+          errorCode.invalid,
+        ),
+      );
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashNewPassword = await bcrypt.hash(newPassword, salt);
+
+    const accessTokenPayload = { id: user!.id };
+    const refreshTokenPayload = {
+      id: user!.id,
+      phone: user!.phone,
+    };
+
+    const newAccessToken = jwt.sign(
+      accessTokenPayload,
+      process.env.ACCESS_TOKEN_SECRET!,
+      {
+        expiresIn: 60 * 15,
+      },
+    );
+
+    const newRefreshToken = jwt.sign(
+      refreshTokenPayload,
+      process.env.REFRESH_TOKEN_SECRET!,
+      {
+        expiresIn: "30d",
+      },
+    );
+
+    const userUpdateData = {
+      password: hashNewPassword,
+      randToken: newRefreshToken,
+    };
+
+    await updateUser(user!.id, userUpdateData);
+
+    res
+      .cookie("accessToken", newAccessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        maxAge: 15 * 60 * 1000,
+        path: "/",
+      })
+      .cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        path: "/",
+      })
+      .status(200)
+      .json({
+        message: "Successfully changed your password.",
+      });
+  },
+];

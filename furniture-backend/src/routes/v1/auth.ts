@@ -1,6 +1,7 @@
 import express from "express";
 import {
   authCheck,
+  changePassword,
   confirmPassword,
   forgetPassword,
   login,
@@ -23,6 +24,8 @@ router.post("/logout", logout);
 router.post("/forget-password", forgetPassword);
 router.post("/verify", verifyOtpForPassword);
 router.post("/reset-password", resetPassword);
+
+router.post("/change-password", auth, changePassword);
 
 router.get("/auth-check", auth, authCheck);
 
